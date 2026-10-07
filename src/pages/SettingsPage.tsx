@@ -84,6 +84,7 @@ export default function SettingsPage() {
           <strong>100</strong>; if your weights sum to something else the score simply scales with
           them (the app warns you below).
         </p>
+        <div className="table-scroll">
         <table>
           <thead>
             <tr>
@@ -111,6 +112,7 @@ export default function SettingsPage() {
             ))}
           </tbody>
         </table>
+        </div>
         <div className="row tight mt">
           <span className={`badge ${sum === 100 ? 'ok' : 'warn'}`}>total = {sum}</span>
           <button

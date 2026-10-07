@@ -49,6 +49,7 @@ export default function ResearchLog() {
 
       <div className="card">
         <h3>Papers actually analyzed</h3>
+        <div className="table-scroll">
         <table>
           <thead>
             <tr>
@@ -87,6 +88,7 @@ export default function ResearchLog() {
             })}
           </tbody>
         </table>
+        </div>
         <p className="muted small mt">
           “Records” above is the number of question/concept entries extracted from that paper;
           <span className="mono"> concept</span> extraction means only the topic-level analysis was
@@ -96,6 +98,7 @@ export default function ResearchLog() {
 
       <div className="card">
         <h3>Verified specification grids</h3>
+        <div className="table-scroll">
         <table>
           <thead>
             <tr>
@@ -131,6 +134,7 @@ export default function ResearchLog() {
             })}
           </tbody>
         </table>
+        </div>
         <p className="muted small mt">{SPEC_GRIDS.map((g) => `${g.id}: ${g.note}`).join(' ')}</p>
       </div>
 
@@ -165,6 +169,7 @@ export default function ResearchLog() {
 
       <div className="card">
         <h3>Source registry</h3>
+        <div className="table-scroll">
         <table>
           <thead>
             <tr>
@@ -192,6 +197,7 @@ export default function ResearchLog() {
             ))}
           </tbody>
         </table>
+        </div>
       </div>
 
       <div className="card">

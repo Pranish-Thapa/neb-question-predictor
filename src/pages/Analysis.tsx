@@ -54,6 +54,7 @@ export default function Analysis() {
 
       <div className="card">
         <h3>The ten components</h3>
+        <div className="table-scroll">
         <table>
           <thead>
             <tr>
@@ -115,6 +116,7 @@ export default function Analysis() {
             </tr>
           </tbody>
         </table>
+        </div>
 
         <div className="grid-2 mt">
           <div className="notice">
@@ -180,6 +182,7 @@ export default function Analysis() {
               spec-grid fit only.
             </p>
           ) : (
+            <div className="table-scroll">
             <table>
               <thead>
                 <tr>
@@ -224,6 +227,7 @@ export default function Analysis() {
                 })}
               </tbody>
             </table>
+            </div>
           )}
         </div>
       ) : null}

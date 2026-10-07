@@ -87,7 +87,7 @@ p.lede { color: var(--muted); margin-top: 0; }
 .row.tight { gap: 8px; }
 .spacer { flex: 1; }
 
-.stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; }
+.stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(150px, 100%), 1fr)); gap: 10px; }
 .stat {
   background: var(--bg-2);
   border: 1px solid var(--line);
@@ -172,6 +172,8 @@ th, td { text-align: left; padding: 7px 8px; border-bottom: 1px solid var(--line
 th { color: var(--muted); font-weight: 600; font-size: 12.5px; }
 tr:last-child td { border-bottom: none; }
 
+.table-scroll { overflow-x: auto; overflow-y: hidden; -webkit-overflow-scrolling: touch; overscroll-behavior-x: contain; }
+
 .score-bar {
   height: 8px;
   background: var(--bg-3);
@@ -197,8 +199,8 @@ ul.comp .k { min-width: 190px; color: var(--muted); }
 ul.comp .p { min-width: 52px; text-align: right; font-variant-numeric: tabular-nums; }
 ul.evidence { margin: 6px 0 0; padding-left: 18px; font-size: 13px; color: var(--muted); }
 
-.grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 12px; }
-.grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 10px; }
+.grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(280px, 100%), 1fr)); gap: 12px; }
+.grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(210px, 100%), 1fr)); gap: 10px; }
 
 .chapter-bar { display: flex; align-items: center; gap: 8px; font-size: 13px; padding: 3px 0; }
 .chapter-bar .name { min-width: 230px; color: var(--muted); }
@@ -252,7 +254,88 @@ footer.app-footer {
   border-top: 1px solid var(--line);
 }
 
-@media (max-width: 640px) {
-  .chapter-bar .name { min-width: 130px; }
+img, video, svg { max-width: 100%; height: auto; }
+
+/* ------------------------------------------------------------------ */
+/* Mobile / small screens                                              */
+/* ------------------------------------------------------------------ */
+@media (max-width: 760px) {
+  body { font-size: 15.5px; }
+
+  .app-header { padding: 8px 12px; }
+  .brand { margin-bottom: 6px; gap: 6px; }
   .brand h1 { font-size: 15px; }
+  .brand .sub { font-size: 12px; width: 100%; }
+
+  /* single-row, swipeable navigation instead of four wrapping rows */
+  .nav {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior-x: contain;
+    scrollbar-width: none;
+    margin: 0 -12px;
+    padding: 0 12px;
+  }
+  .nav::-webkit-scrollbar { display: none; }
+  .nav a {
+    flex: 0 0 auto;
+    white-space: nowrap;
+    padding: 9px 13px;
+    font-size: 14px;
+  }
+
+  main { padding: 14px 12px 48px; }
+  h2 { font-size: 18px; }
+  h3 { font-size: 15px; }
+
+  .card { padding: 12px; margin-bottom: 12px; }
+  .stat { padding: 10px 12px; }
+  .stat .value { font-size: 21px; }
+
+  .row { gap: 8px; }
+  .row > * { min-width: 0; }
+  .row > .field, label.field { min-width: 0 !important; }
+  .btn { padding: 10px 14px; min-height: 40px; }
+  .btn.small { padding: 8px 12px; min-height: 36px; }
+  .chip { padding: 8px 12px; font-size: 13px; }
+
+  /* iOS zooms the page when a focused control is smaller than 16px */
+  select, input[type="text"], input[type="number"], input[type="search"], textarea {
+    font-size: 16px;
+    max-width: 100%;
+  }
+  label.field select, label.field input { width: 100%; }
+
+  /* wide tables swipe sideways instead of squeezing into one-word columns */
+  .table-scroll th, .table-scroll td { min-width: 96px; }
+  .table-scroll .badge { white-space: nowrap; }
+
+  summary { padding: 6px 0; min-height: 32px; }
+  .mcq-options label { padding: 10px 12px; font-size: 15px; }
+  .q-text { font-size: 15.5px; overflow-wrap: break-word; }
+  .paper-q .body { overflow-wrap: break-word; }
+  .mono { overflow-wrap: anywhere; }
+
+  ul.comp .k { min-width: 0; }
+  ul.comp li { flex-wrap: wrap; }
+
+  .chapter-bar { flex-wrap: wrap; }
+  .chapter-bar .name { min-width: 0; flex: 1 1 100%; }
+  .chapter-bar .bar { flex: 1 1 auto; min-width: 90px; }
+
+  .timer { font-size: 19px; padding: 5px 10px; }
+
+  footer.app-footer { padding: 16px 12px; }
+}
+
+@media (max-width: 420px) {
+  .brand h1 { font-size: 14px; }
+  .stat .value { font-size: 19px; }
+  .table-scroll th, .table-scroll td { min-width: 88px; }
+  .card { padding: 11px 10px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * { transition: none !important; animation: none !important; }
 }

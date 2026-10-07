@@ -92,6 +92,7 @@ export default function Dashboard() {
       <div className="grid-2">
         <div className="card">
           <h3>Priority distribution ({scored.length} candidates)</h3>
+          <div className="table-scroll">
           <table>
             <thead>
               <tr>
@@ -120,6 +121,7 @@ export default function Dashboard() {
               ))}
             </tbody>
           </table>
+          </div>
           <p className="q-meta mt">
             Labels are thresholds on a 100-point evidence score — never probabilities.{' '}
             <Link to="/analysis">See how the score is built →</Link>

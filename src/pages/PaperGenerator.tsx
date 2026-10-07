@@ -197,6 +197,7 @@ export default function PaperGenerator() {
         {state.savedPapers.length === 0 ? (
           <p className="muted small">No saved papers yet. Generate one and press “Save”.</p>
         ) : (
+          <div className="table-scroll">
           <table>
             <thead>
               <tr>
@@ -238,6 +239,7 @@ export default function PaperGenerator() {
               ))}
             </tbody>
           </table>
+          </div>
         )}
       </div>
     </>
