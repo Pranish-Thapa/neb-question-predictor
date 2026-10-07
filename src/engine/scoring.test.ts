@@ -54,6 +54,19 @@ describe('scoring engine', () => {
     expect(s.terminalAppearances).toBe(0);
   });
 
+  it('counts real terminal appearances for the one subject that has a terminal paper', () => {
+    const candidate = ALL_CANDIDATES.find((c) => c.familyId === 'eco-rent-theory')!;
+    expect(candidate.subject).toBe('economics');
+    const s = scoreCandidate(candidate, index, {
+      subject: 'economics',
+      grid: getGrid('eco-75-verified'),
+    });
+    expect(s.terminalAppearances).toBeGreaterThan(0);
+    const terminal = s.components.find((c) => c.key === 'terminal')!;
+    expect(terminal.points).toBeGreaterThan(0);
+    expect(terminal.detail).toContain('verified terminal-paper appearance');
+  });
+
   it('keeps personal signals out of the evidence score and exposes them as a separate boost', () => {
     const candidate = ALL_CANDIDATES.find((c) => c.subject === 'cs')!;
     const plain = scoreCandidate(candidate, index, { subject: 'cs', grid: getGrid('cs-50-verified') });
@@ -109,5 +122,15 @@ describe('scoring engine', () => {
     const cs = subjectCoverage('cs');
     expect(cs.chapters).toBe(7);
     expect(cs.chaptersWithCandidates).toBe(7);
+  });
+
+  it('returns the requested top-N for every subject, including the commerce subjects', () => {
+    for (const subject of ['accountancy', 'economics'] as const) {
+      const cov = subjectCoverage(subject);
+      expect(cov.candidates).toBeGreaterThanOrEqual(22);
+      for (const topN of [5, 10, 15, 20]) {
+        expect(predict({ subject, topN })).toHaveLength(topN);
+      }
+    }
   });
 });

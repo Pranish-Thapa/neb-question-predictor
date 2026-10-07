@@ -2,7 +2,7 @@ import { describe, it, expect } from 'vitest';
 import { runAllValidations, validateGrid, validateSyllabus } from './validators';
 import { SPEC_GRIDS, gridTotalMarks } from '../data/specGrids';
 import { EXCLUDED_SUBJECTS, SUBJECT_ORDER } from '../data/syllabus';
-import { ALL_CANDIDATES, ALL_EVIDENCE, ALL_FAMILIES, ALL_PAPERS, familiesMissingCandidates } from '../data/db';
+import { ALL_CANDIDATES, ALL_EVIDENCE, ALL_FAMILIES, ALL_PAPERS, computeDbStats, familiesMissingCandidates } from '../data/db';
 
 describe('data integrity', () => {
   it('has no validation errors anywhere', () => {
@@ -10,8 +10,8 @@ describe('data integrity', () => {
     expect(errors.map((e) => `${e.code}: ${e.message}`)).toEqual([]);
   });
 
-  it('covers all three required subjects', () => {
-    expect(SUBJECT_ORDER).toEqual(['physics', 'chemistry', 'cs']);
+  it('covers all five supported subjects', () => {
+    expect(SUBJECT_ORDER).toEqual(['physics', 'chemistry', 'cs', 'accountancy', 'economics']);
     for (const s of SUBJECT_ORDER) {
       expect(validateSyllabus(s).filter((i) => i.level === 'error')).toEqual([]);
     }
@@ -42,13 +42,19 @@ describe('data integrity', () => {
     }
   });
 
-  it('has no terminal evidence yet, and says so rather than inventing any', () => {
+  it('claims terminal evidence only for subjects that really have a registered terminal paper', () => {
     const terminalPapers = ALL_PAPERS.filter((p) => p.examType === 'terminal');
     const terminalEvidence = ALL_EVIDENCE.filter(
       (e) => terminalPapers.some((p) => p.id === e.paperId),
     );
-    expect(terminalEvidence.length).toBe(0);
-    expect(terminalPapers.length).toBe(0);
+    // every terminal record hangs off an actually-registered terminal paper
+    expect(terminalEvidence.every((e) => terminalPapers.some((p) => p.id === e.paperId))).toBe(true);
+    // and subjects with no terminal paper have no terminal records at all
+    for (const s of SUBJECT_ORDER) {
+      const stats = computeDbStats(s);
+      if (stats.terminalPapers === 0) expect(stats.terminalEvidence).toBe(0);
+      else expect(stats.terminalEvidence).toBeGreaterThan(0);
+    }
   });
 
   it('gives every evidenced concept at least one rankable candidate question', () => {

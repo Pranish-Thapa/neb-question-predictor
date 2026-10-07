@@ -3,7 +3,7 @@
   "private": true,
   "version": "1.0.0",
   "type": "module",
-  "description": "Evidence-based question importance predictor and exam simulator for NEB Class 12 Science (Physics, Chemistry, Computer Science)",
+  "description": "Evidence-based question importance predictor and exam simulator for NEB Class 12 Science and Commerce (Physics, Chemistry, Computer Science, Accountancy, Economics)",
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",

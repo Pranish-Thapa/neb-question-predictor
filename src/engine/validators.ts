@@ -66,16 +66,12 @@ export function validateData(): Issue[] {
   const issues: Issue[] = [];
   const paperById = new Map(ALL_PAPERS.map((p) => [p.id, p]));
   const familyById = new Map(ALL_FAMILIES.map((f) => [f.id, f]));
-  const chapterIds: Record<SubjectId, Set<string>> = {
-    physics: new Set(SYLLABUS.physics.chapters.map((c) => c.id)),
-    chemistry: new Set(SYLLABUS.chemistry.chapters.map((c) => c.id)),
-    cs: new Set(SYLLABUS.cs.chapters.map((c) => c.id)),
-  };
-  const topicIds: Record<SubjectId, Set<string>> = {
-    physics: new Set(SYLLABUS.physics.chapters.flatMap((c) => c.topics.map((t) => t.id))),
-    chemistry: new Set(SYLLABUS.chemistry.chapters.flatMap((c) => c.topics.map((t) => t.id))),
-    cs: new Set(SYLLABUS.cs.chapters.flatMap((c) => c.topics.map((t) => t.id))),
-  };
+  const chapterIds: Record<SubjectId, Set<string>> = Object.fromEntries(
+    SUBJECT_ORDER.map((s) => [s, new Set(SYLLABUS[s].chapters.map((c) => c.id))]),
+  ) as Record<SubjectId, Set<string>>;
+  const topicIds: Record<SubjectId, Set<string>> = Object.fromEntries(
+    SUBJECT_ORDER.map((s) => [s, new Set(SYLLABUS[s].chapters.flatMap((c) => c.topics.map((t) => t.id)))]),
+  ) as Record<SubjectId, Set<string>>;
 
   const seenEvidence = new Set<string>();
   for (const ev of ALL_EVIDENCE) {
@@ -152,8 +148,11 @@ export function validateData(): Issue[] {
       issues.push({ level: 'error', code: 'excluded-subject', message: `excluded subject name "${bad}" found in data` });
     }
   }
-  if (!SUBJECT_ORDER.includes('physics') || !SUBJECT_ORDER.includes('chemistry') || !SUBJECT_ORDER.includes('cs')) {
-    issues.push({ level: 'error', code: 'subject-order', message: 'SUBJECT_ORDER is missing a required subject' });
+  const required: SubjectId[] = ['physics', 'chemistry', 'cs', 'accountancy', 'economics'];
+  for (const s of required) {
+    if (!SUBJECT_ORDER.includes(s)) {
+      issues.push({ level: 'error', code: 'subject-order', message: `SUBJECT_ORDER is missing required subject ${s}` });
+    }
   }
 
   return issues;

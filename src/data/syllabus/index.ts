@@ -2,16 +2,30 @@ import type { SubjectId, SyllabusChapter, SyllabusSubject, SyllabusTopic } from 
 import { PHYSICS } from './physics';
 import { CHEMISTRY } from './chemistry';
 import { COMPUTER_SCIENCE } from './computerScience';
+import { ACCOUNTANCY } from './accountancy';
+import { ECONOMICS } from './economics';
 
-export { PHYSICS, CHEMISTRY, COMPUTER_SCIENCE };
+export { PHYSICS, CHEMISTRY, COMPUTER_SCIENCE, ACCOUNTANCY, ECONOMICS };
 
 export const SYLLABUS: Record<SubjectId, SyllabusSubject> = {
   physics: PHYSICS,
   chemistry: CHEMISTRY,
   cs: COMPUTER_SCIENCE,
+  accountancy: ACCOUNTANCY,
+  economics: ECONOMICS,
 };
 
-export const SUBJECT_ORDER: SubjectId[] = ['physics', 'chemistry', 'cs'];
+export const SUBJECT_ORDER: SubjectId[] = ['physics', 'chemistry', 'cs', 'accountancy', 'economics'];
+
+/** Stream grouping used by the subject picker (Science / Commerce). */
+export const SUBJECT_GROUPS: { label: string; subjects: SubjectId[] }[] = [
+  { label: 'Science', subjects: ['physics', 'chemistry', 'cs'] },
+  { label: 'Commerce', subjects: ['accountancy', 'economics'] },
+];
+
+export function groupOf(subject: SubjectId): string {
+  return SUBJECT_GROUPS.find((g) => g.subjects.includes(subject))?.label ?? 'Science';
+}
 
 /** Hard exclusion list — these subjects must never appear anywhere in this app. */
 export const EXCLUDED_SUBJECTS = ['mathematics', 'math', 'english', 'nepali', 'biology'];

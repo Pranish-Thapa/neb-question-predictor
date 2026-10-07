@@ -1,7 +1,8 @@
 import { useMemo } from 'react';
-import { ALL_EVIDENCE, ALL_PAPERS, computeDbStats } from '../data/db';
+import { ALL_EVIDENCE, ALL_PAPERS, computeDbStats, sourceCountFor } from '../data/db';
 import { SOURCES } from '../data/sources';
 import { SPEC_GRIDS, validateGridTotals } from '../data/specGrids';
+import { SUBJECT_GROUPS, SUBJECT_ORDER, SYLLABUS } from '../data/syllabus';
 import { runAllValidations } from '../engine/validators';
 
 const TIER_MEANING: Record<number, string> = {
@@ -16,6 +17,10 @@ export default function ResearchLog() {
   const stats = useMemo(() => computeDbStats(), []);
   const issues = useMemo(() => runAllValidations(), []);
   const gridChecks = useMemo(() => validateGridTotals(), []);
+  const subjectStats = useMemo(
+    () => SUBJECT_ORDER.map((s) => ({ id: s, stats: computeDbStats(s), sources: sourceCountFor(s) })),
+    [],
+  );
   const errors = issues.filter((i) => i.level === 'error');
   const warnings = issues.filter((i) => i.level === 'warning');
 
@@ -31,7 +36,10 @@ export default function ResearchLog() {
       <div className="stats">
         <div className="stat">
           <div className="value">{stats.papers}</div>
-          <div className="label">papers analyzed ({stats.boardPapers} board · {stats.modelPapers} model)</div>
+          <div className="label">
+            papers analyzed ({stats.boardPapers} board · {stats.modelPapers} model
+            {stats.terminalPapers ? ` · ${stats.terminalPapers} terminal` : ''})
+          </div>
         </div>
         <div className="stat">
           <div className="value">{stats.evidence}</div>
@@ -43,7 +51,9 @@ export default function ResearchLog() {
         </div>
         <div className="stat">
           <div className="value">{stats.terminalEvidence}</div>
-          <div className="label">terminal-paper records (insufficient data)</div>
+          <div className="label">
+            terminal-paper records ({stats.terminalPapers} paper, {stats.terminalEvidence} records)
+          </div>
         </div>
       </div>
 
@@ -93,6 +103,61 @@ export default function ResearchLog() {
           “Records” above is the number of question/concept entries extracted from that paper;
           <span className="mono"> concept</span> extraction means only the topic-level analysis was
           machine-readable, so no verbatim wording is claimed.
+        </p>
+      </div>
+
+      <div className="card">
+        <h3>Research coverage per subject</h3>
+        <div className="table-scroll">
+        <table>
+          <thead>
+            <tr>
+              <th>Subject</th>
+              <th>Stream</th>
+              <th>Papers</th>
+              <th>Families</th>
+              <th>Records</th>
+              <th>Candidates (A·B·C)</th>
+              <th>Linked sources</th>
+              <th>Terminal</th>
+            </tr>
+          </thead>
+          <tbody>
+            {subjectStats.map(({ id, stats: s, sources }) => (
+              <tr key={id}>
+                <td className="small">
+                  {SYLLABUS[id].name}
+                  <div className="muted mono small">code {SYLLABUS[id].subjectCode}</div>
+                </td>
+                <td className="small">
+                  {SUBJECT_GROUPS.find((g) => g.subjects.includes(id))?.label ?? '—'}
+                </td>
+                <td className="mono small">
+                  {s.papers} ({s.boardPapers}b · {s.modelPapers}m{s.terminalPapers ? ` · ${s.terminalPapers}t` : ''})
+                </td>
+                <td className="mono">{s.families}</td>
+                <td className="mono small">
+                  {s.evidence} ({s.verbatimEvidence}v · {s.conceptEvidence}c)
+                </td>
+                <td className="mono small">
+                  {s.candidates} ({s.candidatesBySection.A} · {s.candidatesBySection.B} ·{' '}
+                  {s.candidatesBySection.C})
+                </td>
+                <td className="mono">{sources}</td>
+                <td>
+                  <span className={`badge ${s.terminalEvidence > 0 ? 'ok' : 'warn'}`}>
+                    {s.terminalEvidence > 0 ? `${s.terminalEvidence} records` : 'none yet'}
+                  </span>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+        </div>
+        <p className="muted small mt">
+          Papers column: b = board, m = model, t = terminal. Records: v = verbatim, c = concept-only.
+          A·B·C are the official grid sections (1 / 5 / 8 marks). “none yet” means no machine-readable
+          terminal paper for that subject — the score reports “Insufficient verified data” for it.
         </p>
       </div>
 
@@ -208,7 +273,7 @@ export default function ResearchLog() {
           <li>Frequency counts are computed at runtime from the records that exist.</li>
           <li>Excluded subjects appear nowhere in the data — an automated test enforces this.</li>
           <li>Priority labels (🔥/🟠/🟡/⚪) are thresholds, never probabilities.</li>
-          <li>Terminal evidence is reported as “Insufficient verified data” until real terminal records are added.</li>
+          <li>Each subject’s terminal layer reports “Insufficient verified data” until that subject has real terminal records — appearances are never borrowed from another subject’s data.</li>
         </ol>
       </div>
     </>

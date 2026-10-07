@@ -1,6 +1,6 @@
 import type { ScoredQuestion, SignalFlag, SubjectId } from '../engine/types';
 import { PRIORITY_LABEL } from '../engine/scoring';
-import { SYLLABUS, SUBJECT_ORDER } from '../data/syllabus';
+import { SYLLABUS, SUBJECT_GROUPS } from '../data/syllabus';
 import { useSubject } from '../App';
 import { useApp } from '../store/AppProvider';
 
@@ -10,10 +10,14 @@ export function SubjectPicker() {
     <label className="field">
       Subject
       <select value={subject} onChange={(e) => setSubject(e.target.value as SubjectId)}>
-        {SUBJECT_ORDER.map((id) => (
-          <option key={id} value={id}>
-            {SYLLABUS[id].name} ({SYLLABUS[id].subjectCode})
-          </option>
+        {SUBJECT_GROUPS.map((group) => (
+          <optgroup key={group.label} label={group.label}>
+            {group.subjects.map((id) => (
+              <option key={id} value={id}>
+                {SYLLABUS[id].name} ({SYLLABUS[id].subjectCode})
+              </option>
+            ))}
+          </optgroup>
         ))}
       </select>
     </label>

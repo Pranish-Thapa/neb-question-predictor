@@ -5,7 +5,7 @@ import { SubjectPicker, PriorityBadge } from '../components/shared';
 import { chapterSummaries } from '../engine/scoring';
 import { predict, subjectCoverage } from '../engine/predictor';
 import { computeDbStats, sourceCountFor } from '../data/db';
-import { SYLLABUS } from '../data/syllabus';
+import { SYLLABUS, SUBJECT_ORDER } from '../data/syllabus';
 import { getGridsForSubject } from '../data/specGrids';
 import type { Priority } from '../engine/types';
 
@@ -27,6 +27,8 @@ export default function Dashboard() {
     rankBy: state.settings.rankBy,
   });
   const chapters = chapterSummaries(subject, scored);
+  const terminalSubjectIds = SUBJECT_ORDER.filter((s) => computeDbStats(s).terminalEvidence > 0);
+  const terminalNames = terminalSubjectIds.map((s) => SYLLABUS[s].shortName).join(', ');
   const dist = (['very-high', 'high', 'medium', 'low'] as Priority[]).map((p) => ({
     p,
     n: scored.filter((s) => s.priority === p).length,
@@ -49,7 +51,10 @@ export default function Dashboard() {
       <div className="stats">
         <div className="stat">
           <div className="value">{stats.papers}</div>
-          <div className="label">papers analyzed ({stats.boardPapers} board, {stats.modelPapers} model)</div>
+          <div className="label">
+            papers analyzed ({stats.boardPapers} board, {stats.modelPapers} model
+            {stats.terminalPapers ? `, ${stats.terminalPapers} terminal` : ''})
+          </div>
         </div>
         <div className="stat">
           <div className="value">{stats.evidence}</div>
@@ -83,10 +88,29 @@ export default function Dashboard() {
       </div>
 
       <div className="notice">
-        <strong>Terminal-paper evidence: {allStats.terminalEvidence} records.</strong> No school
-        terminal question text could be machine-read in this research session, so the terminal layer
-        of the score reports “Insufficient verified data” instead of inventing appearances. Add
-        terminal records to <span className="mono">src/data</span> and the layer activates by itself.
+        <strong>
+          Terminal-paper evidence: {allStats.terminalEvidence} records
+          {terminalSubjectIds.length ? ` (${terminalNames})` : ''}.
+        </strong>
+        {terminalSubjectIds.length === 0 ? (
+          <>
+            {' '}
+            No school terminal question text could be machine-read in this research session, so the
+            terminal layer of the score reports “Insufficient verified data” instead of inventing
+            appearances.
+          </>
+        ) : (
+          <>
+            {' '}
+            Subjects without any terminal record (
+            {SUBJECT_ORDER.filter((s) => !terminalSubjectIds.includes(s))
+              .map((s) => SYLLABUS[s].shortName)
+              .join(', ') || 'none'}
+            ) report “Insufficient verified data” instead of inventing appearances.
+          </>
+        )}{' '}
+        Add terminal records to <span className="mono">src/data</span> and the layer activates by
+        itself.
       </div>
 
       <div className="grid-2">

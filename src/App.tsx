@@ -1,6 +1,7 @@
 import { createContext, useContext, useState } from 'react';
 import { NavLink, Navigate, Route, Routes } from 'react-router-dom';
 import type { SubjectId } from './engine/types';
+import { SUBJECT_ORDER, SYLLABUS } from './data/syllabus';
 import { useApp } from './store/AppProvider';
 import Dashboard from './pages/Dashboard';
 import Predictor from './pages/Predictor';
@@ -50,7 +51,10 @@ export default function App() {
         <div className="brand">
           <h1>NEB Class 12 — Question Predictor &amp; Exam Simulator</h1>
           <span className="sub">
-            Physics 1021 · Chemistry 3021 · Computer Science 4281 · evidence-based, local-first
+            {SUBJECT_ORDER.map((id) => `${SYLLABUS[id].shortName} ${SYLLABUS[id].subjectCode}`).join(
+              ' · ',
+            )}{' '}
+            · evidence-based, local-first
           </span>
         </div>
         <nav className="nav">

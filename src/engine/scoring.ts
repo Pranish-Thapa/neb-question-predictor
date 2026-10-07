@@ -58,7 +58,8 @@ export interface PredictorIndex {
   paperById: Map<string, PaperRecord>;
   latestYear: number;
   earliestYear: number;
-  anyTerminalEvidence: boolean;
+  /** Subjects that have at least one verified terminal-paper record (empty = nobody has any). */
+  subjectsWithTerminalEvidence: Set<SubjectId>;
 }
 
 let cachedIndex: PredictorIndex | undefined;
@@ -79,7 +80,11 @@ export function buildIndex(): PredictorIndex {
     paperById,
     latestYear: years.length ? Math.max(...years) : 0,
     earliestYear: years.length ? Math.min(...years) : 0,
-    anyTerminalEvidence: ALL_EVIDENCE.some((e) => paperById.get(e.paperId)?.examType === 'terminal'),
+    subjectsWithTerminalEvidence: new Set(
+      ALL_EVIDENCE
+        .filter((e) => paperById.get(e.paperId)?.examType === 'terminal')
+        .map((e) => paperById.get(e.paperId)!.subject),
+    ),
   };
   return cachedIndex;
 }
@@ -204,11 +209,11 @@ export function scoreCandidate(
     label: WEIGHT_LABELS.terminal,
     weight: weights.terminal,
     points: round1(weights.terminal * Math.min(terminalEv.length / 2, 1)),
-    detail: index.anyTerminalEvidence
+    detail: index.subjectsWithTerminalEvidence.has(ctx.subject)
       ? (terminalEv.length
         ? `${terminalEv.length} verified terminal-paper appearance${terminalEv.length > 1 ? 's' : ''}`
         : 'no verified terminal-paper appearance')
-      : 'Insufficient verified data — no terminal-paper question records have been extracted yet',
+      : 'Insufficient verified data — no terminal-paper question records have been extracted for this subject yet',
   });
 
   /* 6 — recency */

@@ -85,9 +85,9 @@ Same structure: `11 MCQ + 8×5 + 3×8 = 75`.
 | 2081 supplementary 4281 | Board | Structure (50 marks, Group A/B/C, ORs) | scribd.com | 2 |
 
 ### Terminal / school papers — HONEST STATUS
-- **Verified located:** St. Xavier's College, Maitighar — Class 12 First Terminal 2080/081 (Physics) — existence confirmed (aman--sapkota.com.np, Tier 3). Full question text was **not** retrievable in this session.
-- **No other terminal papers** were retrievable as full text. Therefore the database ships with **very little/no terminal evidence**, and the app reports terminal counts truthfully (0 + "insufficient verified data" notices) rather than inventing them.
-- The terminal-evidence scoring layer is implemented and will activate as soon as terminal records are added to `src/data/terminalQuestions.ts`.
+- **Economics — one real terminal paper registered:** Shree Tribhuwan Shanti Secondary School, Terminal Examination 2082, Class 12 Economics, F.M. 75, 3 Hrs. School name, class, subject, marks and full question text (Groups A, B, C) are readable on the hosting page (askfilo.com, Tier 3). **Caveat recorded in the source entry:** the host is a user-generated Q&A platform, so authenticity rests on the page content alone (single source, not corroborated by the school). It mirrors the official board structure exactly.
+- **Physics / Chemistry / Computer Science / Accountancy:** no terminal question text was retrievable in this research. The St. Xavier's College 2080/081 Physics terminal is confirmed to exist (Tier 3) but was not machine-readable, so no records were extracted from it.
+- The app therefore reports terminal evidence **per subject**: Economics shows real terminal appearances; the other four subjects report "Insufficient verified data" instead of inventing counts (enforced by scoring code and tests).
 
 ---
 
@@ -99,7 +99,7 @@ Same structure: `11 MCQ + 8×5 + 3×8 = 75`.
 5. Scoring labels are priority labels (🔥/🟠/🟡/⚪), never probabilities or guarantees.
 
 ## 5. Known limitations (surfaced inside the app)
-- Terminal-paper corpus ≈ empty → terminal-evidence component will read "Insufficient verified data".
+- Terminal-paper corpus is still thin: one real terminal paper (Economics 2082) and nothing for the other four subjects → the terminal component reads "Insufficient verified data" for those subjects.
 - Not every year of every paper was readable (PDF scans) → counts represent *verified appearances only*.
 - Specification grids change; each grid in `src/data/specGrids.ts` stores its `verifiedFrom` sources and `lastVerified` date.
 
@@ -111,10 +111,10 @@ Same structure: `11 MCQ + 8×5 + 3×8 = 75`.
 Built in `C:\Users\acer\neb-question-predictor` - React 19 + TypeScript + Vite, fully local (no network calls at runtime).
 
 **Data (`src/data`)**
-- `syllabus/` - verified 25-chapter Physics, 21-unit Chemistry, 7-unit Computer Science syllabi; exclusion list enforced in code.
-- `sources.ts` - 29 registered sources with tier, URL and access date.
-- `specGrids.ts` - `phy-75-verified`, `chm-75-verified`, `cs-50-verified`, plus `cs-75-derived` (flagged DERIVED, opt-in).
-- `db/` - physics (6 papers), chemistry (5), computer science (5), each with question families, evidence records and rankable candidates; every evidenced concept has at least one candidate (enforced by a test).
+- `syllabus/` - verified 25-chapter Physics, 21-unit Chemistry, 7-unit Computer Science, 14-chapter Accountancy and 6-unit Economics syllabi; exclusion list enforced in code.
+- `sources.ts` - 46 registered sources with tier, URL and access date.
+- `specGrids.ts` - `phy-75-verified`, `chm-75-verified`, `cs-50-verified`, `acc-75-verified`, `eco-75-verified`, plus `cs-75-derived` (flagged DERIVED, opt-in).
+- `db/` - physics (6 papers), chemistry (5), computer science (5), accountancy (4), economics (8), each with question families, evidence records and rankable candidates; every evidenced concept has at least one candidate (enforced by a test).
 
 **Engine (`src/engine`)**
 - `validators.ts` - syllabus, grid and cross-reference integrity checks (also rendered in the app's Research Log page).
@@ -124,4 +124,33 @@ Built in `C:\Users\acer\neb-question-predictor` - React 19 + TypeScript + Vite, 
 
 **App (`src/pages`)** - Dashboard, Question Predictor, Paper Generator, Exam Simulator (timer, auto-graded Group A, self-marked written answers), "Why this rank?" audit view, Syllabus browser, Research Log, Settings (weights, derived-grid toggle, local data reset).
 
-**Verification**: `npx tsc -b` clean; `npm test` = 33 tests passing (data integrity, excluded subjects, grid arithmetic, exact paper totals, seed reproducibility, SSR render of every page); `npm run build` succeeds.
+**Verification**: `npx tsc -b` clean; `npm test` = 36 tests passing (data integrity, excluded subjects, grid arithmetic, exact paper totals, seed reproducibility, per-subject terminal honesty, top-N for every subject, SSR render of every page); `npm run build` succeeds.
+
+---
+
+## 7. Extension research — Accountancy & Economics (2026-10-07)
+
+Same verification pipeline as the Science subjects: syllabus → specification grid → past papers → terminal (if any) → question families → frequency → recency → cross-source → score → rank. Strictly Class 12 NEB; Class 11 (Acc. 103 / Eco. 303), bachelor/CA and CBSE content excluded.
+
+### Accountancy — Grade 12 (Board code 1041, CDC `Acc. 104`, "लेखाविधि" / Accounting)
+- **Syllabus:** official CDC Grade-12 curriculum PDF (mirror, Tier 2) + official Grade-12 specification grid PDF (gov.np, Tier 1): **4 units / 14 chapters**, 120 theory hours + 40 project hours. Unit hours/marks from the grid: 19/12, 50/29, 41/28, 10/6. Chapter teaching-hours cells sum to **118** while both official documents print 120 — the 2-hour cell-vs-total gap is documented in the syllabus `sourceNote`, not corrected by guess.
+- **Grid (`acc-75-verified`):** official grid prints `11×1 + 8×5 + 3×8 = 22 questions = 75 marks`, 3 hrs, theory 75 + internal 25 = 100. The official grid states OR choices in any two 5-mark and any one 8-mark question, but the three actual board scans show the OR **only inside Group C (Q20)** — the registered grid follows the papers (Group B `choiceSlots: 0`, Group C `choiceSlots: 1`) and the conflict is recorded in the grid `note`.
+- **Papers read (all verbatim, 22/22 questions each):** 2081 Sub.Code 1041 B, 2082 1041 K, 2083 1041 C (EducateNepal 8-page scans, Tier 2) + official Model Question 2078 header (Tier 1, body not transcribed → concept only).
+- **Choice modelling:** Q20's printed OR ("NFRS statements **OR** multi-step income statement + SOFP") is intra-slot, so it is modelled as a separate family (`acc-multi-step-statements`) with its own `C20or` evidence records — the same convention Economics already uses for `B12or`/`C22or`.
+- **Terminal papers:** none found for Accountancy; the database claims none.
+
+### Economics — Grade 12 (Board code 3041, CDC `Eco. 304`)
+- **Syllabus:** official CDC "New Curriculum of Class 11 & 12 Optional Subjects (Third, 2076)" PDF (Tier 1, Grade-11 `Eco. 303` excluded) cross-checked with two independent syllabus reproductions (Tier 4): **6 units**, 120 theory + 40 practical hours.
+- **Grid (`eco-75-verified`):** `11×1 + 8×5 (2 OR) + 3×8 (1 OR) = 75`, 3 Hrs — read identically from 2079 (regular + grade-increment), 2080, 2081, 2082, 2083 board papers, the official 2079 NEB model question (Tier 1 PDF) and the 2082 school terminal paper. OR counts vary a little year to year, so `choiceSlots` records the observed typical pattern, documented in the grid `note`.
+- **Papers read:** 6 board papers (2079 regular, 2079 grade-increment, 2080, 2081, 2082, 2083 — full or selected verbatim text), official 2079 model question, and **one real terminal paper** (Shree Tribhuwan Shanti S.S. School, 2082, F.M. 75) — Tier 3 with an explicit single-source caveat in the registry.
+- **Terminal honesty:** the terminal scoring layer is now keyed **per subject** — Economics scores real terminal appearances; Physics/Chemistry/CS/Accountancy still report "Insufficient verified data" for that component (test-enforced).
+
+### What was added (code)
+- `types.ts`: `SubjectId` extended; `SUBJECT_ORDER` = physics, chemistry, cs, accountancy, economics.
+- New: `syllabus/accountancy.ts`, `syllabus/economics.ts`, `db/accountancy.ts`, `db/economics.ts`; +15 registry sources; +2 verified grids.
+- `scoring.ts`: terminal component detail is now per subject (`subjectsWithTerminalEvidence`).
+- UI: Science/Commerce `<optgroup>` subject pickers (Dashboard, Predictor, Paper Generator, Exam, Analysis, Syllabus, Settings), dynamic header subject line, Dashboard terminal notice and Research Log "Research coverage per subject" table that show the live per-subject figures.
+
+### Verification status
+- `npx tsc -b` clean; `npm test` 36/36 passing; `npm run build` succeeds.
+- Automated checks cover: no validation errors anywhere (all 5 subjects), grid arithmetic for every grid, excluded-subject name scan, every evidenced family has a rankable candidate, generated papers equal each subject's own verified grid total (75/75/50/75/75), honest per-subject terminal reporting, top 5/10/15/20 for both new subjects, SSR render of every page.

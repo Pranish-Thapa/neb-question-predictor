@@ -87,7 +87,7 @@ export default function Analysis() {
             <tr>
               <td>{WEIGHT_LABELS.terminal}</td>
               <td className="mono">{state.settings.weights.terminal}</td>
-              <td className="muted">scaled by terminal-paper appearances — currently reports “Insufficient verified data”</td>
+              <td className="muted">scaled by terminal-paper appearances — subjects without terminal records report “Insufficient verified data”</td>
             </tr>
             <tr>
               <td>{WEIGHT_LABELS.recency}</td>

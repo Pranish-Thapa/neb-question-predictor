@@ -1,6 +1,6 @@
-export type SubjectId = 'physics' | 'chemistry' | 'cs';
+export type SubjectId = 'physics' | 'chemistry' | 'cs' | 'accountancy' | 'economics';
 
-export const SUBJECT_IDS: SubjectId[] = ['physics', 'chemistry', 'cs'];
+export const SUBJECT_IDS: SubjectId[] = ['physics', 'chemistry', 'cs', 'accountancy', 'economics'];
 
 /** A topic inside a chapter of the official Class 12 NEB syllabus. */
 export interface SyllabusTopic {

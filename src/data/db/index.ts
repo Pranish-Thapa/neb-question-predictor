@@ -8,6 +8,18 @@ import type {
 import { PHYSICS_CANDIDATES, PHYSICS_EVIDENCE, PHYSICS_FAMILIES, PHYSICS_PAPERS } from './physics';
 import { CHEM_CANDIDATES, CHEM_EVIDENCE, CHEM_FAMILIES, CHEM_PAPERS } from './chemistry';
 import { CS_CANDIDATES, CS_EVIDENCE, CS_FAMILIES, CS_PAPERS } from './computerScience';
+import {
+  ACCOUNTANCY_CANDIDATES,
+  ACCOUNTANCY_EVIDENCE,
+  ACCOUNTANCY_FAMILIES,
+  ACCOUNTANCY_PAPERS,
+} from './accountancy';
+import {
+  ECONOMICS_CANDIDATES,
+  ECONOMICS_EVIDENCE,
+  ECONOMICS_FAMILIES,
+  ECONOMICS_PAPERS,
+} from './economics';
 
 export interface SubjectDb {
   papers: PaperRecord[];
@@ -34,6 +46,18 @@ export const DB: Record<SubjectId, SubjectDb> = {
     families: CS_FAMILIES,
     evidence: CS_EVIDENCE,
     candidates: CS_CANDIDATES,
+  },
+  accountancy: {
+    papers: ACCOUNTANCY_PAPERS,
+    families: ACCOUNTANCY_FAMILIES,
+    evidence: ACCOUNTANCY_EVIDENCE,
+    candidates: ACCOUNTANCY_CANDIDATES,
+  },
+  economics: {
+    papers: ECONOMICS_PAPERS,
+    families: ECONOMICS_FAMILIES,
+    evidence: ECONOMICS_EVIDENCE,
+    candidates: ECONOMICS_CANDIDATES,
   },
 };
 

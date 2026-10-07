@@ -63,6 +63,44 @@ export const SPEC_GRIDS: SpecGrid[] = [
     ],
   },
   {
+    id: 'acc-75-verified',
+    subject: 'accountancy',
+    title: 'NEB Grade XII Accountancy — Board written paper (verified)',
+    totalMarks: 75,
+    durationMinutes: 180,
+    verification: 'verified',
+    verifiedFromSourceIds: ['acc-spec-grid-cdc', 'acc-paper-2081', 'acc-paper-2082', 'acc-paper-2083'],
+    lastVerified: '2026-10-07',
+    note:
+      'Verified twice over: the official CDC Grade-12 specification grid (Acc.104) prints 11×1 + 8×5 + 3×8 = 22 questions = 75 marks, and all three actual NEB board papers read in this research (2081, 2082, 2083) carry exactly that structure with "Attempt all the questions", Time 3 hrs, Full Marks 75. ' +
+      'Choice: the official grid states the 8-mark long questions carry an "OR" in any one and the 5-mark short questions in any two; the three scans show the OR only inside Group C (Q20). This grid follows the papers (Group B without OR) and records the grid-versus-paper conflict here rather than hiding it. ' +
+      'The 25-mark internal/project component of the official 100-mark scheme is school-assessed and outside this written paper.',
+    sections: [
+      { id: 'A', name: 'Group A — Very Short Answer Questions', questionType: 'short-answer', count: 11, marksPerQuestion: 1, internalChoice: 'none', choiceSlots: 0 },
+      { id: 'B', name: 'Group B — Short Answer Questions', questionType: 'short-answer', count: 8, marksPerQuestion: 5, internalChoice: 'none', choiceSlots: 0 },
+      { id: 'C', name: 'Group C — Long Answer Questions', questionType: 'long-answer', count: 3, marksPerQuestion: 8, internalChoice: 'some', choiceSlots: 1 },
+    ],
+  },
+  {
+    id: 'eco-75-verified',
+    subject: 'economics',
+    title: 'NEB Grade XII Economics — Board written paper (verified)',
+    totalMarks: 75,
+    durationMinutes: 180,
+    verification: 'verified',
+    verifiedFromSourceIds: ['eco-paper-2079', 'eco-paper-2079gi', 'eco-paper-2080', 'eco-paper-2081', 'eco-paper-2082', 'eco-paper-2083', 'eco-model-2079', 'eco-terminal-2082'],
+    lastVerified: '2026-10-07',
+    note:
+      'Structure read identically from every Economics paper in this research: 2079 (regular + grade-increment), 2080, 2081, 2082, 2083, the official 2079 model question and the 2082 school terminal paper — Group A 11 very-short × 1, Group B 8 short × 5 with two "OR" alternatives, Group C 3 long × 8 with one "OR" = 22 items / 75 marks, Time 3 Hrs. ' +
+      'The number of OR alternatives varies a little year to year (2082 carries more than 2080/2083), so choiceSlots records the observed typical pattern, not a guarantee for a future paper. ' +
+      'The unit-wise marks table exists only in syllabus reproductions (secondary) and is not used to force chapter selection.',
+    sections: [
+      { id: 'A', name: 'Group A — Very Short Answer Questions', questionType: 'short-answer', count: 11, marksPerQuestion: 1, internalChoice: 'none', choiceSlots: 0 },
+      { id: 'B', name: 'Group B — Short Answer Questions', questionType: 'short-answer', count: 8, marksPerQuestion: 5, internalChoice: 'some', choiceSlots: 2 },
+      { id: 'C', name: 'Group C — Long Answer Questions', questionType: 'long-answer', count: 3, marksPerQuestion: 8, internalChoice: 'some', choiceSlots: 1 },
+    ],
+  },
+  {
     id: 'cs-75-derived',
     subject: 'cs',
     title: 'School-terminal 75-mark adaptation for Computer Science (DERIVED — not an official NEB grid)',

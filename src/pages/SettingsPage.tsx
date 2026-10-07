@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { DEFAULT_WEIGHTS, WEIGHT_LABELS } from '../engine/scoring';
 import { DEFAULT_SETTINGS, useApp } from '../store/AppProvider';
-import { SYLLABUS, SUBJECT_ORDER } from '../data/syllabus';
+import { SYLLABUS, SUBJECT_GROUPS } from '../data/syllabus';
 import type { SubjectId } from '../engine/types';
 
 export default function SettingsPage() {
@@ -30,10 +30,14 @@ export default function SettingsPage() {
               value={state.settings.defaultSubject}
               onChange={(e) => updateSettings({ defaultSubject: e.target.value as SubjectId })}
             >
-              {SUBJECT_ORDER.map((id) => (
-                <option key={id} value={id}>
-                  {SYLLABUS[id].name}
-                </option>
+              {SUBJECT_GROUPS.map((group) => (
+                <optgroup key={group.label} label={group.label}>
+                  {group.subjects.map((id) => (
+                    <option key={id} value={id}>
+                      {SYLLABUS[id].name} ({SYLLABUS[id].subjectCode})
+                    </option>
+                  ))}
+                </optgroup>
               ))}
             </select>
           </label>
